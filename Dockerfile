@@ -2,11 +2,11 @@
 # docker build -t appsoa/centos-base-java:testing .
 #
 FROM centos:7
+ENV INSTALL4J_JAVA_HOME=/usr/java/jdk1.8.0_60 \
+    TZ=America/Phoenix
 
-# RUN mkdir -p $NO_VNC_HOME/utils/websockify \
-    # && wget -qO- https://github.com/kanaka/noVNC/archive/v0.6.1.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME \
-    # && wget -qO- https://github.com/kanaka/websockify/archive/v0.8.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify \
-    # && chmod +x -v /root/noVNC/utils/*.sh
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 COPY src/home /home
 COPY src/bin /bin
@@ -16,6 +16,5 @@ RUN useradd user && \
     yum -y install net-tools which
 
 WORKDIR /home/user/noVNC
-# RUN /bin/entrypoint.sh
 EXPOSE 6901
 ENTRYPOINT ["/bin/entrypoint.sh"]
